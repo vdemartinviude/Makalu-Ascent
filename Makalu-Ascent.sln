@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakaluLibrary", "MakaluLibrary\MakaluLibrary.csproj", "{8BE6226D-A5C4-4395-ADAF-0DC2E2584408}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakaluTests", "MakaluTests\MakaluTests.csproj", "{B3E1680F-C0AE-45D3-9D68-0C0145E14EFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BE6226D-A5C4-4395-ADAF-0DC2E2584408}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BE6226D-A5C4-4395-ADAF-0DC2E2584408}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BE6226D-A5C4-4395-ADAF-0DC2E2584408}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BE6226D-A5C4-4395-ADAF-0DC2E2584408}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3E1680F-C0AE-45D3-9D68-0C0145E14EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3E1680F-C0AE-45D3-9D68-0C0145E14EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3E1680F-C0AE-45D3-9D68-0C0145E14EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3E1680F-C0AE-45D3-9D68-0C0145E14EFB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
