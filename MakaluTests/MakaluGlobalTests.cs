@@ -35,4 +35,19 @@ public class MakaluGlobalTests
         
         
     }
+
+    [Fact]
+    public void AssureCanInvokeConvert()
+    {
+        var converters = MakaluTranslatorHelpers.GetJsonConversionStrategies(Assembly.GetExecutingAssembly());
+        var types = converters
+            .Select(t => new {
+                typeConvert = t,
+                typeParameters = t.GetInterfaces().Single().GetGenericArguments()
+            })
+            .Where(t => t.typeParameters[0] == typeof(SourceAddressJson) && t.typeParameters[1] == typeof(DestinyaddressJson)).Single();
+
+
+
+    }
 }
