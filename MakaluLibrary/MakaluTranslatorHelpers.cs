@@ -1,4 +1,5 @@
-﻿using MakaluLibrary.Interfaces;
+﻿using MakaluLibrary.Classes;
+using MakaluLibrary.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,29 @@ namespace MakaluLibrary;
 
 public static class MakaluTranslatorHelpers
 {
-    public static IEnumerable<Type> GetJsonConversionStrategies(Assembly assembly)
+    public static IEnumerable<ConvertDefinition> GetJsonConversionStrategies(Assembly assembly)
     {
-        var genericInterface = typeof(IJsonConversionStrategy<,>);
+        var genericClass = typeof(BaseConverter<,>);
         return assembly.GetTypes()
-            .Where(t => t.IsClass && !t.IsAbstract)
-            .Where(t => t.GetInterfaces()
-                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericInterface))
-            .ToList();
+            .Where(t => t.IsClass &&
+                        !t.IsAbstract &&
+                        t.BaseType != null &&
+                        t.BaseType.IsGenericType &&
+                        t.BaseType.GetGenericTypeDefinition() == genericClass)
+            .Select(t => new ConvertDefinition
+            {
+                Converter = t,
+                JsonInput = t.BaseType!.GetGenericArguments()[0],
+                JsonOutput = t.BaseType!.GetGenericArguments()[1]
+            });
+            
     }
 
+}
+
+public class ConvertDefinition
+{
+    public Type Converter { get; set; }
+    public Type JsonInput { get; set; } 
+    public Type JsonOutput { get; set; }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MakaluTests.TestUtils;
 
-internal class DestinyaddressJson : IDestinyJson
+public class DestinyAddressJson : IDestinyJson
 {
     public string FullAddress { get; set; } 
 }

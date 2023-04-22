@@ -1,53 +1,40 @@
+using MakaluLibrary.Exception;
+using MakaluLibrary.Interfaces;
 using MakaluTests.TestUtils;
 using System.Reflection;
+using Xunit.Abstractions;
+
 namespace MakaluTests;
 
 public class MakaluGlobalTests
 {
-    [Fact]
-    public void EnsureCanCreateMakaluLibrary()
-    {
-        MakaluTranslator makaluTranslator = new (MakaluTranslatorHelpers.GetJsonConversionStrategies(Assembly.GetExecutingAssembly()));
-        SourceAddressJson source = new SourceAddressJson();
-        var destiby = makaluTranslator.Convert<DestinyaddressJson>(source);
+    private readonly ITestOutputHelper _outputHelper;
 
+    public MakaluGlobalTests(ITestOutputHelper outputHelper)
+    {
+        _outputHelper = outputHelper;
     }
 
     [Fact]
-    public void EnsureCanListConverts()
+    public void ListConvertTests()
     {
-        var converters = MakaluTranslatorHelpers.GetJsonConversionStrategies(Assembly.GetExecutingAssembly());
-        Assert.Contains(typeof(TestConverter), converters);
+        var converts = MakaluTranslatorHelpers.GetJsonConversionStrategies(Assembly.GetExecutingAssembly())!.ToList();
+        Assert.Single(converts);
+        Assert.Equal(typeof(SourceAddressJson),converts.Single().JsonInput);  
+        Assert.Equal(typeof(DestinyAddressJson),converts.Single().JsonOutput);
+        Assert.Equal(typeof(TestConverter), converts.Single().Converter);
     }
-
+    
     [Fact]
-    public void EnsureCanDetermineTheGenericParametersOfAConverter()
+    public void InvokeConvertTest()
     {
-        var converters = MakaluTranslatorHelpers.GetJsonConversionStrategies(Assembly.GetExecutingAssembly());
-        var types = converters
-            .Select(t => new {
-                typeConvert = t,
-                typeParameters = t.GetInterfaces().Single().GetGenericArguments()
-            })
-            .Where(t => t.typeParameters[0] == typeof(SourceAddressJson) && t.typeParameters[1] == typeof(DestinyaddressJson)).Single();
-
-        Assert.Equal(typeof(TestConverter), types.typeConvert);
-        
-        
-    }
-
-    [Fact]
-    public void AssureCanInvokeConvert()
-    {
-        var converters = MakaluTranslatorHelpers.GetJsonConversionStrategies(Assembly.GetExecutingAssembly());
-        var types = converters
-            .Select(t => new {
-                typeConvert = t,
-                typeParameters = t.GetInterfaces().Single().GetGenericArguments()
-            })
-            .Where(t => t.typeParameters[0] == typeof(SourceAddressJson) && t.typeParameters[1] == typeof(DestinyaddressJson)).Single();
-
-
-
+        var sourceJson = new SourceAddressJson()
+        {
+            Street = "Rua José Zappi, 988",
+            Country = "Brazil",
+            PostalCode = "03128141"
+        };
+        MakaluTranslator makaluTranslator = new(MakaluTranslatorHelpers.GetJsonConversionStrategies(Assembly.GetExecutingAssembly()));
+        Assert.Throws<InvalidDocumentException>(()=> makaluTranslator.Convert<DestinyAddressJson>(sourceJson));
     }
 }

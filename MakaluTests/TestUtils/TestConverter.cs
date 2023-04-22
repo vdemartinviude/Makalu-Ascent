@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MakaluLibrary.Classes;
 using MakaluLibrary.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,16 @@ using System.Threading.Tasks;
 
 namespace MakaluTests.TestUtils;
 
-public class TestConverter : IJsonConversionStrategy<SourceAddressJson, DestinyaddressJson>
+public class TestConverter : BaseConverter<SourceAddressJson,DestinyAddressJson> 
 {
-    public AbstractValidator<ISourceJson> SourceValidator { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    AbstractValidator<ISourceJson> IJsonConversionStrategy<SourceAddressJson, DestinyaddressJson>.SourceValidator { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override AbstractValidator<SourceAddressJson> SourceValidator { get { return new TesteSourceValidator(); }  }
 
-    DestinyaddressJson IJsonConversionStrategy<SourceAddressJson, DestinyaddressJson>.InternalConvert(ISourceJson sourceJson)
+    public override IDestinyJson InternalConvert(SourceAddressJson sourceJson)
     {
-        throw new NotImplementedException();
+        SourceAddressJson source = (SourceAddressJson)sourceJson;
+        return new DestinyAddressJson
+        {
+            FullAddress = String.Concat(source.Street, " ", source.City, " ", source.Country, " ", source.PostalCode)
+        };
     }
 }

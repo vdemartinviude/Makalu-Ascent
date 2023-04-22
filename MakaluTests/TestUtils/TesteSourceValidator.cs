@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace MakaluTests.TestUtils;
 
-internal class SourceValidator : AbstractValidator<SourceAddressJson>
+public class TesteSourceValidator : AbstractValidator<SourceAddressJson>
 {
-    public SourceValidator()
+    public TesteSourceValidator()
     {
         RuleFor(x => x.Street).NotEmpty();
         RuleFor(x => x.City).NotEmpty();

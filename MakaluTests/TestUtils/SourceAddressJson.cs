@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MakaluTests.TestUtils;
 
-internal class SourceAddressJson : ISourceJson
+public class SourceAddressJson : ISourceJson
 {
     public string Street { get; set; }  
     public string City { get; set; }

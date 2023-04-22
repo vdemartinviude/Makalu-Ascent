@@ -1,24 +1,35 @@
-﻿using MakaluLibrary.Interfaces;
+﻿using MakaluLibrary.Classes;
+using MakaluLibrary.Exception;
+using MakaluLibrary.Interfaces;
+using System.Reflection;
 
 namespace MakaluLibrary;
 
 public class MakaluTranslator
 {
-    private readonly IEnumerable<Type> _converters;
-    public MakaluTranslator(IEnumerable<Type> jsonConversionStrategies)
+    private readonly IEnumerable<ConvertDefinition> _converters;
+    public MakaluTranslator(IEnumerable<ConvertDefinition> jsonConversionStrategies)
     {
         _converters = jsonConversionStrategies;
     }
-    public T Convert<T>(ISourceJson sourceJson)
+
+    public TDestiny Convert<TDestiny>(ISourceJson sourceJson)
     {
-        var convertType = _converters
-            .Where(t => sourceJson.GetType().IsAssignableFrom(t.GetGenericArguments()[0]))
-            .Where(t => typeof(T).IsAssignableFrom(t.GetGenericArguments()[1])) 
-            .SingleOrDefault(); 
-
-        var convert = (IJsonConversionStrategy<ISourceJson,IDestinyJson>) Activator.CreateInstance(convertType);
-
-        return (T) convert.Convert(sourceJson);
+        var converterType = _converters
+                                .Where(cn => cn.JsonInput == sourceJson.GetType() && cn.JsonOutput == typeof(TDestiny))
+                                .Select(cn => cn.Converter).SingleOrDefault() 
+                                ?? throw new System.Exception("Converter not found!");
+        var ActualConverter = Activator.CreateInstance(converterType)!;
+        try
+        {
+            TDestiny result = (TDestiny)converterType.GetMethod("Convert")!.Invoke(ActualConverter, new object[] { sourceJson })!;
+            return result;
+        }
+        catch (TargetInvocationException ex)
+        {
+            throw ex.InnerException!;
+        }
 
     }
+
 }
